@@ -22,20 +22,23 @@ def loadIDData(fileName):
     ids = text[0].strip().split('\t')[1:]
     ids = cleanID(ids, fileName)
     data = [[] for i in range(len(ids))]
+    names = []
     for line in text[1:]:
         line = line.strip()
-        items = line.split('\t')[1:]
-        assert len(items) == len(ids)
-        for i in range(len(items)):
-            data[i].append(float(items[i]))
+        items = line.split('\t')
+        names.append(items[0])
+        values = items[1:]
+        assert len(values) == len(ids)
+        for i in range(len(values)):
+            data[i].append(float(values[i]))
     result = {}
     for i in range(len(ids)):
         result[ids[i]] = data[i]
 
     data = np.array(data)
-    result[0] = np.mean(data, 0)
+    result[0] = np.mean(data, 0).tolist()
 
-    return result
+    return result, names
 
 def union(a, b):
     c = a + b
@@ -62,35 +65,48 @@ def mergeFile():
     fileName2 = 'plasma_metab.txt'
     fileName3 = 'stool_micro.txt'
 
-    r = loadIDData(fileName1)
-    p = loadIDData(fileName2)
-    s = loadIDData(fileName3)
+    r, rname = loadIDData(fileName1)
+    p, pname = loadIDData(fileName2)
+    s, sname = loadIDData(fileName3)
 
     rID = [i for i in r]
     pID = [i for i in p]
     sID = [i for i in s]
 
-    print rID
-    print pID
-    print sID
+    ids = showAllID(rID, pID, sID)
+    result = {}
+    for i in ids:
+        if i != 0:
+            if i in r:
+                rd = r[i]
+            else:
+                rd = r[0]
+            if i in p:
+                pd = p[i]
+            else:
+                pd = p[0]
+            if i in s:
+                sd = s[i]
+            else:
+                sd = s[0]
+            result[i] = rd + pd + sd
 
-    print intersect(rID, pID)
-    print intersect(pID, sID)
-    print intersect(rID, sID)
+    names = rname + pname + sname
+    t = len(names)
 
-    c = showCommonID(rID, pID, sID)
-    print len(c)
-    print c
-
-    print '-----------'
-
-    print union(rID, pID)
-    print union(pID, sID)
-    print union(rID, sID)
-
-    a = showAllID(rID, pID, sID)
-    print len(a)
-    print a
+    f = open(folderPath + 'allUnion.txt', 'w')
+    f.writelines('ID:')
+    for i in range(len(ids)):
+        if ids[i]!= 0:
+            f.writelines('\t'+str(ids[i]))
+    f.writelines('\n')
+    for j in range(t):
+        f.writelines(names[j])
+        for i in range(len(ids)):
+            if ids[i]!= 0:
+                f.writelines('\t' + str(result[ids[i]][j]))
+    f.writelines('\n')
+    f.close()
 
 if __name__ == '__main__':
     mergeFile()
