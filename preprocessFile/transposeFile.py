@@ -23,5 +23,4 @@ def transposeFile(filename):
 
 
 if __name__ == '__main__':
-    transposeFile('rna_stool.txt')
-    # transposeFile('stool_micro.txt')
+    transposeFile('allUnion.txt')

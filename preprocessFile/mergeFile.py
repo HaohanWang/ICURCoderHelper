@@ -105,7 +105,7 @@ def mergeFile():
         for i in range(len(ids)):
             if ids[i]!= 0:
                 f.writelines('\t' + str(result[ids[i]][j]))
-    f.writelines('\n')
+        f.writelines('\n')
     f.close()
 
 if __name__ == '__main__':
