@@ -59,5 +59,17 @@ def featureSelection(filename, fn=2000):
         f.writelines('\t'.join(m)+'\n')
     f.close()
 
+def screenMethodsForMetab(filename):
+    text = open(folderPath+filename).read().splitlines()
+    f = open(folderPath+filename[:-4]+'_selected.txt', 'w')
+    for line in text:
+        line = line.strip()
+        items = line.split('\t')
+        if items[1] == 'Drug':
+            pass
+        else:
+            f.writelines(items[0]+'\t'+'\t'.join(items[2:])+'\n')
+    f.close()
+
 if __name__ == '__main__':
-    featureSelection('rna_seq.txt')
+    screenMethodsForMetab('plasma_metab.txt')

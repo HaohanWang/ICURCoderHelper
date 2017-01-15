@@ -8,7 +8,7 @@ def cleanID(ids, fileName):
         result = [int(i) for i in ids]
         return result
     if fileName.startswith('plasma'):
-        result = [int(i[1:-1]) for i in ids]
+        result = [int(i) for i in ids]
         return result
     if fileName.startswith('stool'):
         result = []
@@ -108,5 +108,130 @@ def mergeFile():
         f.writelines('\n')
     f.close()
 
+def mergeRNA_stool():
+    fileName1 = 'rna_seq_selected.txt'
+    fileName2 = 'stool_micro.txt'
+
+    r, rname = loadIDData(fileName1)
+    p, pname = loadIDData(fileName2)
+
+    rID = [i for i in r]
+    pID = [i for i in p]
+
+    ids = union(rID, pID)
+    result = {}
+    for i in ids:
+        if i != 0:
+            if i in r:
+                rd = r[i]
+            else:
+                rd = r[0]
+            if i in p:
+                pd = p[i]
+            else:
+                pd = p[0]
+            result[i] = rd + pd
+
+    names = rname + pname
+    t = len(names)
+
+    f = open(folderPath + 'union_rna_stool.txt', 'w')
+    f.writelines('ID:')
+    for i in range(len(ids)):
+        if ids[i]!= 0:
+            f.writelines('\t'+str(ids[i]))
+    f.writelines('\n')
+    for j in range(t):
+        f.writelines(names[j])
+        for i in range(len(ids)):
+            if ids[i]!= 0:
+                f.writelines('\t' + str(result[ids[i]][j]))
+        f.writelines('\n')
+    f.close()
+
+def mergeRNA_metab():
+    fileName1 = 'rna_seq_selected.txt'
+    fileName2 = 'plasma_metab_selected.txt'
+
+    r, rname = loadIDData(fileName1)
+    p, pname = loadIDData(fileName2)
+
+    rID = [i for i in r]
+    pID = [i for i in p]
+
+    ids = union(rID, pID)
+    result = {}
+    for i in ids:
+        if i != 0:
+            if i in r:
+                rd = r[i]
+            else:
+                rd = r[0]
+            if i in p:
+                pd = p[i]
+            else:
+                pd = p[0]
+            result[i] = rd + pd
+
+    names = rname + pname
+    t = len(names)
+
+    f = open(folderPath + 'union_rna_metab.txt', 'w')
+    f.writelines('ID:')
+    for i in range(len(ids)):
+        if ids[i]!= 0:
+            f.writelines('\t'+str(ids[i]))
+    f.writelines('\n')
+    for j in range(t):
+        f.writelines(names[j])
+        for i in range(len(ids)):
+            if ids[i]!= 0:
+                f.writelines('\t' + str(result[ids[i]][j]))
+        f.writelines('\n')
+    f.close()
+
+def mergeMetab_stool():
+    fileName1 = 'plasma_metab_selected.txt'
+    fileName2 = 'stool_micro.txt'
+
+    r, rname = loadIDData(fileName1)
+    p, pname = loadIDData(fileName2)
+
+    rID = [i for i in r]
+    pID = [i for i in p]
+
+    ids = union(rID, pID)
+    result = {}
+    for i in ids:
+        if i != 0:
+            if i in r:
+                rd = r[i]
+            else:
+                rd = r[0]
+            if i in p:
+                pd = p[i]
+            else:
+                pd = p[0]
+            result[i] = rd + pd
+
+    names = rname + pname
+    t = len(names)
+
+    f = open(folderPath + 'union_metab_stool.txt', 'w')
+    f.writelines('ID:')
+    for i in range(len(ids)):
+        if ids[i]!= 0:
+            f.writelines('\t'+str(ids[i]))
+    f.writelines('\n')
+    for j in range(t):
+        f.writelines(names[j])
+        for i in range(len(ids)):
+            if ids[i]!= 0:
+                f.writelines('\t' + str(result[ids[i]][j]))
+        f.writelines('\n')
+    f.close()
+
 if __name__ == '__main__':
-    mergeFile()
+    mergeRNA_metab()
+    mergeRNA_stool()
+    mergeMetab_stool()
