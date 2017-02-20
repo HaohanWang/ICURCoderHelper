@@ -18,15 +18,27 @@ def cleanID(ids, fileName):
         return result
 
 def loadIDData(fileName):
+    if fileName.startswith('rna'):
+        nameA = 'r'
+    elif fileName.startswith('plasma'):
+        nameA = 'p'
+    elif fileName.startswith('stool'):
+        nameA = 's'
+    else:
+        nameA = ''
+
     text = open(folderPath+fileName).read().splitlines()
     ids = text[0].strip().split('\t')[1:]
     ids = cleanID(ids, fileName)
     data = [[] for i in range(len(ids))]
     names = []
+    c = -1
     for line in text[1:]:
+        c += 1
         line = line.strip()
         items = line.split('\t')
-        names.append(items[0])
+        # names.append(items[0])
+        names.append(nameA + str(c))
         values = items[1:]
         assert len(values) == len(ids)
         for i in range(len(values)):
@@ -62,7 +74,7 @@ def showAllID(rID, pID, sID):
 
 def mergeFile():
     fileName1 = 'rna_seq_selected.txt'
-    fileName2 = 'plasma_metab.txt'
+    fileName2 = 'plasma_metab_selected.txt'
     fileName3 = 'stool_micro.txt'
 
     r, rname = loadIDData(fileName1)
@@ -231,7 +243,22 @@ def mergeMetab_stool():
         f.writelines('\n')
     f.close()
 
+def getNameList(fileName):
+    names = []
+    text = open(folderPath+fileName).read().splitlines()
+    for line in text[1:]:
+        line = line.strip()
+        items = line.split('\t')
+        names.append(items[0])
+    f = open(folderPath+fileName[:-4]+'_nameList.txt', 'w')
+    for name in names:
+        f.writelines(name+'\n')
+    f.close()
+
 if __name__ == '__main__':
     mergeRNA_metab()
     mergeRNA_stool()
     mergeMetab_stool()
+    getNameList('rna_seq_selected.txt')
+    getNameList('stool_micro.txt')
+    getNameList('plasma_metab_selected.txt')
