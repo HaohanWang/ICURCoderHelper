@@ -3,98 +3,89 @@ __author__ = 'Haohan Wang'
 from utility.filePath import *
 import numpy as np
 
-def calculateFileLines():
-    fileName1 = 'rna_seq_selected.txt' # 2000
-    fileName2 = 'plasma_metab_selected.txt' # 693
-    fileName3 = 'stool_micro.txt' # 28
+import os
 
-    text1 = open(folderPath+fileName1).read().splitlines()
-    print len(text1) - 1
-
-    text2 = open(folderPath+fileName2).read().splitlines()
-    print len(text2) - 1
-
-    text3 = open(folderPath+fileName3).read().splitlines()
-    print len(text3) - 1
-
-
-def writeOutResults(fileName, threshold):
+def generateNameList():
     nameListMapping = {}
-    text = [line.strip() for line in open(folderPath+'rna_seq_selected_nameList.txt')]
+    text = [line.strip() for line in open(mergePath+'rna_seq_nameList.txt')]
     for i in range(len(text)):
         nameListMapping['r'+str(i)] = text[i]
 
-    text = [line.strip() for line in open(folderPath+'stool_micro_nameList.txt')]
+    text = [line.strip() for line in open(mergePath+'stool_micro_nameList.txt')]
     for i in range(len(text)):
         nameListMapping['s'+str(i)] = text[i]
 
-    text = [line.strip() for line in open(folderPath+'plasma_metab_selected_nameList.txt')]
+    text = [line.strip() for line in open(mergePath+'plasma_metab_nameList.txt')]
     for i in range(len(text)):
         nameListMapping['p'+str(i)] = text[i]
+    return nameListMapping
 
-    resultFolder = folderPath + 'results/'
-    graphFolder = folderPath + 'graphs/'
+def generateNameRules(filename):
+    if filename.startswith('union_metab_stool'):
+        return 693, 'p', 's'
+    elif filename.startswith('union_rna_metab'):
+        return 200, 'r', 'p'
+    else:
+        return 200, 'r', 's'
 
-    for k in range(1, 15):
-        data = []
-        dataText = [line.strip() for line in open(graphFolder+'union_'+fileName+'_graphWeights_'+str(k))][1:]
-        for line in dataText:
-            items = line.split(',')
-            l = [float(item) for item in items[1:]]
-            data.append(l)
-        data = np.array(data)
-        print data.shape
+def matchName(filename, x, y, nameListMapping):
+    t, a, b = generateNameRules(filename)
+    if x < t:
+        xname = nameListMapping[a+str(x)]
+    else:
+        xname = nameListMapping[b+str(x-t)]
+    if y < t:
+        yname = nameListMapping[a+str(y)]
+    else:
+        yname = nameListMapping[b+str(y-t)]
+    return xname, yname
 
-        text = open(folderPath+'union_'+fileName+'.txt').read().splitlines()
-        names = []
-        t = len(text)-1
-        for i in range(1, len(text)):
-            names.append(text[i].split()[0])
-        print len(names)
-        f = open(resultFolder+'union_'+fileName+'directedGraph_'+str(k)+'.tsv', 'w')
-        for i in range(t):
-            for j in range(t):
-                if data[i,j]!=0:
-                    f.writelines(nameListMapping[names[i]]+'\t'+nameListMapping[names[j]]+ '\t' + str(data[i,j])+'\n')
-        f.close()
+def writeOutResults(nameListMapping):
+    # healthy ones
+    for r, d, f in os.walk(healthyGraphPath):
+        for fn in f:
+            data = []
+            text = [line.strip() for line in open(healthyGraphPath+fn)]
+            for line in text[1:]:
+                d = []
+                items = line.split(',')
+                for item in items[1:]:
+                    d.append(float(item))
+                data.append(d)
+            data = np.array(data)
+            ind1, ind2 = np.where(data!=0)
+            f = open(healthyResultPath+fn.split('.')[0]+'_'+fn.split('_')[-1]+'.txt', 'w')
 
-def analyzeResults(fileName, threshold):
-    graphFolder = folderPath + 'graphs/'
+            for i in range(ind1.shape[0]):
+                x = ind1[i]
+                y = ind2[i]
+                xname, yname = matchName(fn, x, y, nameListMapping)
+                f.writelines(xname+'\t'+yname+'\t'+str(data[x, y])+'\n')
+            f.close()
 
-    text = open(folderPath+ 'union_'+ fileName +'_transposed.txt').read().splitlines()
-    names = text[0].split()[1:]
-    t = len(names)
-    # for i in range(1, len(text)):
-    #     names.append(text[i].split()[0])
+    # diseased Ones
+    for r, d, f in os.walk(diseasedGraphPath):
+        for fn in f:
+            data = []
+            text = [line.strip() for line in open(diseasedGraphPath+fn)]
+            for line in text[1:]:
+                d = []
+                items = line.split(',')
+                for item in items[1:]:
+                    d.append(float(item))
+                data.append(d)
+            data = np.array(data)
+            ind1, ind2 = np.where(data!=0)
+            f = open(diseasedResultPath+fn.split('.')[0]+'_'+fn.split('_')[-1]+'.txt', 'w')
 
-
-    for i in range(1, 18):
-        print '-------------------------'
-        print 'Graph', i
-        data = []
-        dataText = [line.strip() for line in open(graphFolder+'union_'+fileName+'_graphWeights_'+str(i))][1:]
-        for line in dataText:
-            items = line.split(',')
-            l = [float(item) for item in items[1:]]
-            data.append(l)
-        data = np.array(data)
-
-        assert data.shape[0] == data.shape[1]
-        assert data.shape[0] == t
-
-
-        for i in range(t):
-            for j in range(t):
-                if data[i,j]!=0:
-                    if (i <= threshold and j > threshold) or (j<=threshold and i>threshold):
-                        print names[i], names[j], data[i,j]
-        print '-------------------------'
+            for i in range(ind1.shape[0]):
+                x = ind1[i]
+                y = ind2[i]
+                xname, yname = matchName(fn, x, y, nameListMapping)
+                f.writelines(xname+'\t'+yname+'\t'+str(data[x, y])+'\n')
+            f.close()
 
 
 if __name__ == '__main__':
-    fileThreshold1 = ('rna_stool', 2000)
-    fileThreshold2 = ('rna_metab', 2000)
-    fileThreshold3 = ('metab_stool', 693)
-
-    # analyzeResults(fileThreshold3[0], fileThreshold3[1])
-    writeOutResults(fileThreshold3[0], fileThreshold3[1])
+    nameListMapping = generateNameList()
+    writeOutResults(nameListMapping)
