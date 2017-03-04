@@ -4,8 +4,8 @@ from utility.filePath import *
 import numpy as np
 import operator
 
-def featureSelection(filename, fn=2000):
-    text = open(folderPath+filename).read().splitlines()
+def featureSelection(filename, fn=200):
+    text = open(originPath+filename).read().splitlines()
     data = []
     for line in text:
         line = line.strip()
@@ -19,7 +19,7 @@ def featureSelection(filename, fn=2000):
         geneIDs.append(data[i][0])
         values.append([float(k) for k in data[i][1:]])
 
-    phenoText = open(folderPath+'phenos.txt').read().splitlines()
+    phenoText = open(originPath+'phenos.txt').read().splitlines()
     deaths = {}
     ids = []
     for line in phenoText[1:]:
@@ -51,7 +51,7 @@ def featureSelection(filename, fn=2000):
         valueNew.append(values[sc[i][0]])
         geneIDNew.append(geneIDs[sc[i][0]])
 
-    f = open(folderPath+filename[:-4]+'_selected.txt', 'w')
+    f = open(selectedPath+filename, 'w')
     f.writelines('ID:\t'+'\t'.join(users)+'\n')
     for i in range(fn):
         f.writelines(geneIDNew[i]+'\t')
@@ -60,8 +60,8 @@ def featureSelection(filename, fn=2000):
     f.close()
 
 def screenMethodsForMetab(filename):
-    text = open(folderPath+filename).read().splitlines()
-    f = open(folderPath+filename[:-4]+'_selected.txt', 'w')
+    text = open(originPath+filename).read().splitlines()
+    f = open(selectedPath+filename, 'w')
     for line in text:
         line = line.strip()
         items = line.split('\t')
@@ -71,5 +71,14 @@ def screenMethodsForMetab(filename):
             f.writelines(items[0]+'\t'+'\t'.join(items[2:])+'\n')
     f.close()
 
+def selectedTopStoolFile(filename, top=5):
+    text = open(originPath+filename).read().splitlines()
+    f = open(selectedPath+filename[:-4]+'_selected.txt', 'w')
+    for line in text[:top+1]:
+        f.writelines(line+'\n')
+    f.close()
+
 if __name__ == '__main__':
+    featureSelection('rna_seq.txt')
     screenMethodsForMetab('plasma_metab.txt')
+    selectedTopStoolFile('stool_micro.txt')
