@@ -7,6 +7,7 @@ originPath = folderPath + '01_original/'
 selectedPath = folderPath + '02_preprocessed/01_selected/'
 normalizedPath = folderPath + '02_preprocessed/02_normalized/'
 mergePath = folderPath + '02_preprocessed/03_merged/'
+transposedPath = folderPath + '02_preprocessed/04_transposed/'
 
 diseasedDataPath = folderPath + '03_diseased/'
 healthyDataPath = folderPath + '03_healthy/'

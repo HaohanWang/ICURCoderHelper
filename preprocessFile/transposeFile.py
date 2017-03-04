@@ -4,7 +4,7 @@ from utility.filePath import *
 
 def transposeFile(filename):
     # text = [line.strip() for line in open(folderPath+filename)]
-    text = open(folderPath+filename).read().splitlines()
+    text = open(mergePath+filename).read().splitlines()
     data = []
     dim = 0
     for line in text:
@@ -13,7 +13,7 @@ def transposeFile(filename):
         print dim
         dim = len(items)
         data.append(items)
-    f = open(folderPath+filename[:-4]+'_transposed.txt', 'w')
+    f = open(transposedPath+filename, 'w')
     for j in range(dim):
         tmp = []
         for i in range(len(data)):

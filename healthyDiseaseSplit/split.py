@@ -20,29 +20,18 @@ def getPhenos():
 
 
 def split(filename, healthPeople, diseasedPeople):
-    text = open(mergePath+filename).read().splitlines()
-    ids = text[0].split('\t')
-    hind = []
-    dind = []
-    for i in range(len(ids)):
-        if ids[i] in healthPeople:
-            hind.append(i)
-        elif ids[i] in diseasedPeople:
-            dind.append(i)
+    text = open(transposedPath+filename).read().splitlines()
 
     f1 = open(healthyDataPath+filename, 'w')
     f2 = open(diseasedDataPath+filename, 'w')
-    for line in text:
+    f1.writelines(text[0]+'\n')
+    f2.writelines(text[0]+'\n')
+    for line in text[1:]:
         items = line.split('\t')
-        f1.writelines(items[0])
-        f2.writelines(items[0])
-        for i in range(len(items)):
-            if i in hind:
-                f1.writelines('\t'+items[i])
-            if i in dind:
-                f2.writelines('\t'+items[i])
-        f1.writelines('\n')
-        f2.writelines('\n')
+        if items[0] in healthPeople:
+            f1.writelines(line+'\n')
+        if items[0] in diseasedPeople:
+            f2.writelines(line+'\n')
     f1.close()
     f2.close()
 
