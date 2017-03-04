@@ -18,32 +18,45 @@ def calculateFileLines():
     print len(text3) - 1
 
 
-def writeOutResults():
-    # data = np.loadtxt(folderPath+'graphWeights.csv', delimiter=',', skiprows=1)
-    # data = data[:,1:]
-    # print data.shape
+def writeOutResults(fileName, threshold):
+    nameListMapping = {}
+    text = [line.strip() for line in open(folderPath+'rna_seq_selected_nameList.txt')]
+    for i in range(len(text)):
+        nameListMapping['r'+str(i)] = text[i]
 
-    data = []
-    dataText = [line.strip() for line in open(folderPath+'graphWeights.csv')][1:]
-    for line in dataText:
-        items = line.split(',')
-        l = [float(item) for item in items[1:]]
-        data.append(l)
-    data = np.array(data)
-    print data.shape
+    text = [line.strip() for line in open(folderPath+'stool_micro_nameList.txt')]
+    for i in range(len(text)):
+        nameListMapping['s'+str(i)] = text[i]
 
-    text = open(folderPath+'rna_stool.txt').read().splitlines()
-    names = []
-    t = len(text)-1
-    for i in range(1, len(text)):
-        names.append(text[i].split()[0])
-    print len(names)
-    f = open(folderPath+'directedGraph.txt', 'w')
-    for i in range(t):
-        for j in range(t):
-            if data[i,j]!=0:
-                f.writelines(names[i]+'\t'+names[j]+ '\t' + str(data[i,j])+'\n')
-    f.close()
+    text = [line.strip() for line in open(folderPath+'plasma_metab_selected_nameList.txt')]
+    for i in range(len(text)):
+        nameListMapping['p'+str(i)] = text[i]
+
+    resultFolder = folderPath + 'results/'
+    graphFolder = folderPath + 'graphs/'
+
+    for k in range(1, 15):
+        data = []
+        dataText = [line.strip() for line in open(graphFolder+'union_'+fileName+'_graphWeights_'+str(k))][1:]
+        for line in dataText:
+            items = line.split(',')
+            l = [float(item) for item in items[1:]]
+            data.append(l)
+        data = np.array(data)
+        print data.shape
+
+        text = open(folderPath+'union_'+fileName+'.txt').read().splitlines()
+        names = []
+        t = len(text)-1
+        for i in range(1, len(text)):
+            names.append(text[i].split()[0])
+        print len(names)
+        f = open(resultFolder+'union_'+fileName+'directedGraph_'+str(k)+'.tsv', 'w')
+        for i in range(t):
+            for j in range(t):
+                if data[i,j]!=0:
+                    f.writelines(nameListMapping[names[i]]+'\t'+nameListMapping[names[j]]+ '\t' + str(data[i,j])+'\n')
+        f.close()
 
 def analyzeResults(fileName, threshold):
     graphFolder = folderPath + 'graphs/'
@@ -83,5 +96,5 @@ if __name__ == '__main__':
     fileThreshold2 = ('rna_metab', 2000)
     fileThreshold3 = ('metab_stool', 693)
 
-
-    analyzeResults(fileThreshold2[0], fileThreshold2[1])
+    # analyzeResults(fileThreshold3[0], fileThreshold3[1])
+    writeOutResults(fileThreshold3[0], fileThreshold3[1])
