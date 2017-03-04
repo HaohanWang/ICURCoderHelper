@@ -54,13 +54,13 @@ def writeOutResults(nameListMapping):
                 data.append(d)
             data = np.array(data)
             ind1, ind2 = np.where(data!=0)
-            f = open(healthyResultPath+fn.split('.')[0]+'_'+fn.split('_')[-1]+'.txt', 'w')
+            f = open(healthyResultPath+fn.split('.')[0]+'_'+fn.split('_')[-1]+'.csv', 'w')
 
             for i in range(ind1.shape[0]):
                 x = ind1[i]
                 y = ind2[i]
                 xname, yname = matchName(fn, x, y, nameListMapping)
-                f.writelines(xname+'\t'+yname+'\t'+str(data[x, y])+'\n')
+                f.writelines(xname+','+yname+','+str(data[x, y])+'\n')
             f.close()
 
     # diseased Ones
@@ -76,13 +76,13 @@ def writeOutResults(nameListMapping):
                 data.append(d)
             data = np.array(data)
             ind1, ind2 = np.where(data!=0)
-            f = open(diseasedResultPath+fn.split('.')[0]+'_'+fn.split('_')[-1]+'.txt', 'w')
+            f = open(diseasedResultPath+fn.split('.')[0]+'_'+fn.split('_')[-1]+'.csv', 'w')
 
             for i in range(ind1.shape[0]):
                 x = ind1[i]
                 y = ind2[i]
                 xname, yname = matchName(fn, x, y, nameListMapping)
-                f.writelines(xname+'\t'+yname+'\t'+str(data[x, y])+'\n')
+                f.writelines(xname+','+yname+','+str(data[x, y])+'\n')
             f.close()
 
 
