@@ -73,7 +73,7 @@ def screenMethodsForMetab(filename):
 
 def selectedTopStoolFile(filename, top=5):
     text = open(originPath+filename).read().splitlines()
-    f = open(selectedPath+filename[:-4]+'_selected.txt', 'w')
+    f = open(selectedPath+filename, 'w')
     for line in text[:top+1]:
         f.writelines(line+'\n')
     f.close()
