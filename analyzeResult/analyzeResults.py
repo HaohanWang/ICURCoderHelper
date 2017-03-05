@@ -5,19 +5,26 @@ import numpy as np
 
 import os
 
+def cleanName(n):
+    tmp = n.replace('"', '')
+    tmp = tmp.replace('\\', '')
+    tmp = tmp.replace('*', '')
+    tmp = tmp.replace(',', '_')
+    return tmp
+
 def generateNameList():
     nameListMapping = {}
     text = [line.strip() for line in open(mergePath+'rna_seq_nameList.txt')]
     for i in range(len(text)):
-        nameListMapping['r'+str(i)] = text[i]
+        nameListMapping['r'+str(i)] = cleanName(text[i])
 
     text = [line.strip() for line in open(mergePath+'stool_micro_nameList.txt')]
     for i in range(len(text)):
-        nameListMapping['s'+str(i)] = text[i]
+        nameListMapping['s'+str(i)] = cleanName(text[i])
 
     text = [line.strip() for line in open(mergePath+'plasma_metab_nameList.txt')]
     for i in range(len(text)):
-        nameListMapping['p'+str(i)] = text[i]
+        nameListMapping['p'+str(i)] = cleanName(text[i])
     return nameListMapping
 
 def generateNameRules(filename):

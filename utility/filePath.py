@@ -17,3 +17,6 @@ healthyGraphPath = folderPath + '04_healthy_graphs/'
 
 diseasedResultPath = folderPath + '05_diseased_results/'
 healthyResultPath = folderPath + '05_healthy_results/'
+
+diseasedFigurePath = folderPath + '06_diseased_visualization/'
+healthyFigurePath = folderPath + '06_healthy_visualization/'
