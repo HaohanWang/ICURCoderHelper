@@ -8,15 +8,6 @@ import os
 
 from analyzeResult.analyzeResults import cleanName
 
-def pickColor(i):
-    colorsListMap = [2000, 757, 28] # rnaSeq, plasma, stool
-    if i < colorsListMap[0]:
-        return 0.0
-    if i < colorsListMap[0] + colorsListMap[1]:
-        return 0.5
-    else:
-        return 1.0
-
 def generateColorDictionary():
     rnames = cleanNames([line.strip() for line in open(mergePath+'rna_seq_nameList.txt')])
     snames = cleanNames([line.strip() for line in open(mergePath+'stool_micro_nameList.txt')])
@@ -32,12 +23,10 @@ def generateColorDictionary():
     return colorDict
 
 def drawGraph(colorDict):
-    G = nx.DiGraph()
-
-    # healthy ones
     for r, d, f in os.walk(healthyResultPath):
         for fn in f:
             edges = []
+            G = nx.DiGraph()
             text = [line.strip() for line in open(healthyResultPath+fn)]
             if len(text)>0 and len(text)<1000:
                 for line in text:
@@ -46,7 +35,7 @@ def drawGraph(colorDict):
                     nodeB = items[1]
                     edges.append((nodeA, nodeB))
                 G.add_edges_from(edges)
-                values = [colorDict.get(node, 0.25) for node in G.nodes()]
+                values = [colorDict[node] for node in G.nodes()]
 
                 pos = nx.spring_layout(G)
                 nx.draw_networkx_nodes(G, pos, cmap=plt.get_cmap('jet'), node_color = values)
@@ -58,6 +47,7 @@ def drawGraph(colorDict):
     for r, d, f in os.walk(diseasedResultPath):
         for fn in f:
             edges = []
+            G = nx.DiGraph()
             text = [line.strip() for line in open(diseasedResultPath+fn)]
             if len(text)>0 and len(text)<1000:
                 for line in text:
@@ -66,7 +56,7 @@ def drawGraph(colorDict):
                     nodeB = items[1]
                     edges.append((nodeA, nodeB))
                 G.add_edges_from(edges)
-                values = [colorDict.get(node, 0.25) for node in G.nodes()]
+                values = [colorDict[node] for node in G.nodes()]
 
                 pos = nx.spring_layout(G)
                 nx.draw_networkx_nodes(G, pos, cmap=plt.get_cmap('jet'), node_color = values)
