@@ -4,7 +4,7 @@ from utility.filePath import *
 import numpy as np
 import operator
 
-def featureSelection(filename, fn=200):
+def featureSelection(filename, fn=2000):
     text = open(originPath+filename).read().splitlines()
     data = []
     for line in text:
