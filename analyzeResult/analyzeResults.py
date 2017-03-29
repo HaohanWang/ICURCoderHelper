@@ -31,9 +31,9 @@ def generateNameRules(filename):
     if filename.startswith('union_metab_stool'):
         return 693, 'p', 's'
     elif filename.startswith('union_rna_metab'):
-        return 200, 'r', 'p'
+        return 2000, 'r', 'p'
     else:
-        return 200, 'r', 's'
+        return 2000, 'r', 's'
 
 def matchName(filename, x, y, nameListMapping):
     t, a, b = generateNameRules(filename)
@@ -57,7 +57,10 @@ def writeOutResults(nameListMapping):
                 d = []
                 items = line.split(',')
                 for item in items[1:]:
-                    d.append(float(item))
+                    if item != 'NA':
+                        d.append(float(item))
+                    else:
+                        d.append(0)
                 data.append(d)
             data = np.array(data)
             ind1, ind2 = np.where(data!=0)
