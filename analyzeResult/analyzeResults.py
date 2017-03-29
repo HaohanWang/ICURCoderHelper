@@ -82,7 +82,10 @@ def writeOutResults(nameListMapping):
                 d = []
                 items = line.split(',')
                 for item in items[1:]:
-                    d.append(float(item))
+                    if item != 'NA':
+                        d.append(float(item))
+                    else:
+                        d.append(0)
                 data.append(d)
             data = np.array(data)
             ind1, ind2 = np.where(data!=0)
