@@ -20,3 +20,5 @@ healthyResultPath = folderPath + '05_healthy_results/'
 
 diseasedFigurePath = folderPath + '06_diseased_visualization/'
 healthyFigurePath = folderPath + '06_healthy_visualization/'
+
+differenceFigurePath = folderPath + '07_difference_visualization/'
