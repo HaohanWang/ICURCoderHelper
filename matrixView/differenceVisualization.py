@@ -7,13 +7,13 @@ from utility.filePath import *
 from analyzeResult.analyzeResults import matchName, generateNameList
 
 def differenceVisualization(nameListMapping, category='all'):
-    healthGraphs = ['union_metab_stool.csv_2', 'union_rna_metab.csv_2', 'union_rna_stool.csv_2']
-    diseasedGraphs = ['union_metab_stool.csv_2', 'union_rna_metab.csv_2', 'union_rna_stool.csv_2']
+    healthGraphs = ['union_metab_stool_sparse_bootstrap.csv']
+    diseasedGraphs = ['union_metab_stool_sparse_bootstrap.csv']
 
     # healthGraphs = ['union_metab_stool.csv_13', 'union_rna_metab.csv_19', 'union_rna_stool.csv_14']
     # diseasedGraphs = ['union_metab_stool.csv_14', 'union_rna_metab.csv_13', 'union_rna_stool.csv_19']
 
-    result = ['union_metab_stool', 'union_rna_metab', 'union_rna_stool']
+    result = ['union_metab_stool']
 
     plt.figure(figsize=(100,100), dpi=100)
 
@@ -110,4 +110,4 @@ def differenceVisualization(nameListMapping, category='all'):
 
 if __name__ == '__main__':
     nameListMapping = generateNameList()
-    differenceVisualization(nameListMapping, category='to')
+    differenceVisualization(nameListMapping, category='all')
