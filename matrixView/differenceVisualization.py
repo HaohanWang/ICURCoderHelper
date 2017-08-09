@@ -7,8 +7,8 @@ from utility.filePath import *
 from analyzeResult.analyzeResults import matchName, generateNameList
 
 def differenceVisualization(nameListMapping, category='all'):
-    healthGraphs = ['union_metab_stool_sparse_bootstrap.csv']
-    diseasedGraphs = ['union_metab_stool_sparse_bootstrap.csv']
+    healthGraphs = ['union_metab_stool_dense_bootstrap.csv']
+    diseasedGraphs = ['union_metab_stool_dense_bootstrap.csv']
 
     # healthGraphs = ['union_metab_stool.csv_13', 'union_rna_metab.csv_19', 'union_rna_stool.csv_14']
     # diseasedGraphs = ['union_metab_stool.csv_14', 'union_rna_metab.csv_13', 'union_rna_stool.csv_19']
