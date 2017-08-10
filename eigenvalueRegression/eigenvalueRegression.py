@@ -115,7 +115,7 @@ def calculateRegressionCoefficient():
     ind.reverse()
     result =[sids[k] for k in ind[:5]]
     for i in range(5):
-        print i+1, result[i]
+        print i+1, result[i], np.abs(c[ind[i]])
     print
     print '-------------------'
 
@@ -141,7 +141,7 @@ def calculateRegressionCoefficient():
         ind.reverse()
         result =[sids[k] for k in ind[:5]]
         for i in range(5):
-            print i+1, result[i]
+            print i+1, result[i], np.abs(c[ind[i]])
         print
 
 
