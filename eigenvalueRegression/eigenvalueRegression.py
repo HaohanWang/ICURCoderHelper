@@ -5,6 +5,7 @@ import numpy as np
 from utility.filePath import originPath
 
 from sklearn.linear_model import LinearRegression
+from models.WaldTest import WaldTest
 
 
 def cleanMetabData():
@@ -108,14 +109,14 @@ def calculateRegressionCoefficient():
     data = np.array(data)
     print data.shape
     print '-------------------'
-    lr = LinearRegression()
+    lr = WaldTest()
     lr.fit(data, y)
-    c = lr.coef_
+    c = lr.getBeta()
     ind = np.argsort(np.abs(c)).tolist()
     ind.reverse()
     result =[sids[k] for k in ind[:5]]
     for i in range(5):
-        print i+1, result[i], np.abs(c[ind[i]])
+        print i+1, result[i], np.abs(np.exp(-c[ind[i]]))
     print
     print '-------------------'
 
@@ -134,14 +135,14 @@ def calculateRegressionCoefficient():
     for i in range(len(sname)):
         print '-------------------'
         print sname[i]
-        lr = LinearRegression()
+        lr = WaldTest()
         lr.fit(exp, res[:, i])
-        c = lr.coef_
+        c = lr.getBeta()
         ind = np.argsort(np.abs(c)).tolist()
         ind.reverse()
         result =[sids[k] for k in ind[:5]]
         for i in range(5):
-            print i+1, result[i], np.abs(c[ind[i]])
+            print i+1, result[i], np.abs(np.exp(-c[ind[i]]))
         print
 
 
