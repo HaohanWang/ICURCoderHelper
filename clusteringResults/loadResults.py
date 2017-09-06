@@ -69,6 +69,10 @@ def cleanPhenotype(users):
     return ds
 
 def clusteringAnalysis():
+    '''
+    this is the wrong one that works on clusters of subjects
+    :return:
+    '''
     data, ids = loadStoolMicrobeResults()
     # data, ids = loadMetabResults()
     phenos = cleanPhenotype(ids)
